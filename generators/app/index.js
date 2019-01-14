@@ -1,7 +1,6 @@
 'use strict';
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const yosay = require('yosay');
 const _ = require('lodash');
 const path = require('path');
 const mkdirp = require('mkdirp');
