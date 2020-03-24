@@ -1,26 +1,20 @@
 {
   "variables": {
-    "host_alias": "<%= projectName %>",
-    "openstack_os_username": "{{env `OS_USERNAME`}}",
-    "openstack_os_password": "{{env `OS_PASSWORD`}}",
-    "openstack_project": "{{env `OS_TENANT_ID`}}",
-    "openstack_region": "{{env `OS_REGION_NAME`}}",
-    "openstack_base_image_id": "5f98ff0e-f8ca-4cde-8f4b-d1ba05e28f78",
+    "instance_name": "<%= projectName %>",
     "ansible_roles_path": "galaxy_roles",
-    "ssh_user": "centos"
+    "image_name": "<%= imageName %>",
+    "image_tags": "dinivas",
+    "image_visibility": "public"
   },
   "builders": [{
     "type": "openstack",
-    "identity_endpoint": "https://auth.cloud.ovh.net/v2.0/",
-    "username": "{{user `openstack_os_username`}}",
-    "password": "{{user `openstack_os_key`}}",
-    "tenant_id": "{{user `openstack_project`}}",
-    "region": "{{user `openstack_region`}}",
-    "source_image": "{{user `openstack_base_image_id`}}",
-    "flavor": "s1-2",
-    "image_visibility": "private",
+    "source_image": "{{user `source_image_id`}}",
+    "flavor": "{{user `flavor`}}",
+    "image_visibility": "{{user `image_visibility` }}",
     "ssh_username": "{{user `ssh_user` }}",
-    "image_name": "<%= imageName %>"
+    "image_name": "{{user `image_name` }}",
+    "image_tags": "{{user `image_tags` }}",
+    "instance_name": "{{user `instance_name`}}"
   }],
   "provisioners": [{
     "type": "ansible",
@@ -29,7 +23,8 @@
     ],
     "user": "{{user `ssh_user` }}",
     "playbook_file": "./playbook.yml",
+    "galaxy_file": "requirements.yml",
     "extra_arguments": [],
-    "host_alias": "{{user `host_alias`}}"
+    "host_alias": "{{user `instance_name`}}"
   }]
 }
