@@ -4,10 +4,11 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const path = require('path');
 const mkdirp = require('mkdirp');
+const prefix = 'packer-';
 
 function computeProjectName(name) {
   name = _.kebabCase(name);
-  name = name.indexOf('packer-') === 0 ? name : 'packer-' + name;
+  name = name.indexOf(prefix) === 0 ? name : prefix + name;
   return name;
 }
 
@@ -25,7 +26,7 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'projectName',
       default: computeProjectName(path.basename(process.cwd())),
-      message: `What is your project name? (The generated project name will be in form generator-${chalk.green(
+      message: `What is your project name? (The generated project name will be in form ${prefix}${chalk.green(
         'projectName'
       )}`,
       store: true
