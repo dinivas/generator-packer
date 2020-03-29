@@ -4,7 +4,7 @@
     "ansible_roles_path": "galaxy_roles",
     "image_name": "<%= imageName %>",
     "image_tags": "dinivas",
-    "image_visibility": "public"
+    "image_visibility": "private"
   },
   "builders": [{
     "type": "openstack",
@@ -14,7 +14,9 @@
     "ssh_username": "{{user `ssh_user` }}",
     "image_name": "{{user `image_name` }}",
     "image_tags": "{{user `image_tags` }}",
-    "instance_name": "{{user `instance_name`}}"
+    "instance_name": "{{user `instance_name`}}",
+    "networks": "{{user `networks`}}",
+    "security_groups": "{{user `security_groups`}}"
   }],
   "provisioners": [{
     "type": "ansible",
