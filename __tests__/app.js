@@ -11,6 +11,6 @@ describe('generator-packer:app', () => {
   });
 
   it('creates files', () => {
-    assert.file(['dummyfile.txt']);
+    assert.file(['template.json']);
   });
 });

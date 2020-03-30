@@ -4,18 +4,15 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const path = require('path');
 const mkdirp = require('mkdirp');
+const prefix = 'packer-';
 
 function computeProjectName(name) {
   name = _.kebabCase(name);
-  name = name.indexOf('packer-') === 0 ? name : 'packer-' + name;
+  name = name.indexOf(prefix) === 0 ? name : prefix + name;
   return name;
 }
 
 module.exports = class extends Generator {
-  constructor(args, opts) {
-    super(args, opts);
-  }
-
   initializing() {
     this.props = {
       projectName: this.options.projectName || this.appname,
@@ -29,7 +26,9 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'projectName',
       default: computeProjectName(path.basename(process.cwd())),
-      message: `What is your project name? (The generated project name will be in form generator-${chalk.green('projectName')}`,
+      message: `What is your project name? (The generated project name will be in form ${prefix}${chalk.green(
+        'projectName'
+      )}`,
       store: true
     }).then(answer => {
       this.props.projectName = computeProjectName(answer.projectName);
@@ -55,14 +54,12 @@ module.exports = class extends Generator {
     return {
       askForProjectName: this._askForProjectName,
       askForImageName: this._askForImageName
-    }
+    };
   }
 
-  configuring() {
+  configuring() {}
 
-  }
-
-  default () {
+  default() {
     if (path.basename(this.destinationPath()) !== this.props.projectName) {
       this.log(
         `Your generator must be inside a folder named ${
@@ -78,17 +75,22 @@ module.exports = class extends Generator {
     // Copy Packer main template file
     this.fs.copyTpl(
       this.templatePath('template.json.ejs'),
-      this.destinationPath('template.json'), {
+      this.destinationPath('template.json'),
+      {
         projectName: this.props.projectName,
         imageName: this.props.imageName
       }
     );
 
     // Copy Ansible Playbook file
-    this.fs.copyTpl(this.templatePath('playbook.yml.ejs'), this.destinationPath('playbook.yml'), {
-      projectName: this.props.projectName,
-      imageName: this.props.imageName
-    });
+    this.fs.copyTpl(
+      this.templatePath('playbook.yml.ejs'),
+      this.destinationPath('playbook.yml'),
+      {
+        projectName: this.props.projectName,
+        imageName: this.props.imageName
+      }
+    );
 
     // Copy Ansible Galaxy requirements file
     this.fs.copy(
@@ -101,15 +103,13 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath('README.md.ejs'),
-      this.destinationPath('README.md'), {
+      this.destinationPath('README.md'),
+      {
         projectName: this.props.projectName
       }
     );
 
-    this.fs.copyTpl(
-      this.templatePath('Makefile.ejs'),
-      this.destinationPath('Makefile')
-    );
+    this.fs.copyTpl(this.templatePath('Makefile.ejs'), this.destinationPath('Makefile'));
   }
 
   install() {}
